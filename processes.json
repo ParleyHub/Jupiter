@@ -2,10 +2,10 @@
   "apps": [
     {
       "name": "jupiter",
-      "script": "./dist/server.js",
+      "script": "server.js",
       "merge_logs": true,
       "max_restarts": 20,
-      "instances": 4,
+      "instances": 5,
       "max_memory_restart": "200M",
       "env": {
         "PORT": 3000,
