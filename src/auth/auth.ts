@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-useless-return */
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
@@ -5,14 +6,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const signToken = (name: string): string => {
+type GenericObject = { [key: string]: string };
+
+const signToken = (payload: GenericObject): string => {
   const secretKey: string = process.env.SECRET_KEY || '';
 
   const options = {
     expiresIn: '1h',
   };
 
-  return jwt.sign({ name }, secretKey, options);
+  return jwt.sign(payload, secretKey, options);
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types

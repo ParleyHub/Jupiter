@@ -12,6 +12,6 @@ authRouters.route('/sign-in').post(signInController);
 authRouters.route('/sign-up').post(signUpController);
 authRouters
   .route('/change-password')
-  .put(auth.jwt.verifyToken, changePasswordController);
+  .put(auth.verifyToken, changePasswordController);
 
 export default authRouters;

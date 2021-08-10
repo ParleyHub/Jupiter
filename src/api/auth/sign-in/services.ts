@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import validator from 'validator';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
 import signInRepository from './repositories';
 import auth from '../../../auth';
+import redisClient from '../../../redis';
 
 import type { SignInDataType } from './types';
 
@@ -40,7 +39,9 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
     throw new Error('The password incorrect.');
   }
 
-  const token: string = auth.jwt.signToken(user.name);
+  const token: string = auth.signToken({ id: user.id });
+
+  if (token) redisClient.set(user.id, token);
 
   return token;
 };

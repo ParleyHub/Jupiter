@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import signUpRepository from './repositories';
 import auth from '../../../auth';
+import redisClient from '../../../redis';
 
 import type { SignUpDataType } from './types';
 
@@ -57,7 +58,9 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
     throw new Error('Something happened.');
   }
 
-  const token: string = auth.jwt.signToken(user.name);
+  const token: string = auth.signToken({ id: user.id });
+
+  if (token) redisClient.set(user.id, token);
 
   return token;
 };

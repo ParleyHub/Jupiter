@@ -3,14 +3,16 @@ services:
   redis:
     image: 'redis:alpine'
     ports:
-      - '6379': '6379'
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - redis:/data/redis
     networks:
       - jupiter_net
 
   postgres:
-    image: 'postgres'
+    image: 'postgres:alpine'
     environment:
       POSTGRES_USER: 'jupiter'
       POSTGRES_PASSWORD: '123456'
@@ -28,10 +30,11 @@ services:
     ports:
       - '3000:3000'
     environment:
-      DB_SCHEMA: 'jupiter'
-      DB_USER: 'jupiter'
-      DB_PASSWORD: '123456'
-      DB_HOST: postgres
+      POSTGRES_SCHEMA: 'jupiter'
+      POSTGRES_USER: 'jupiter'
+      POSTGRES_PASSWORD: '123456'
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
       SECRET_KEY: 'JUPITER'
     volumes:
       - ./src:/app/src
@@ -44,6 +47,7 @@ services:
 
 volumes:
   postgres:
+  redis:
 
 networks:
   jupiter_net:

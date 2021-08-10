@@ -1,5 +1,3 @@
-import jwt from './jwt';
+import auth from './auth';
 
-export default {
-  jwt,
-};
+export default auth;
