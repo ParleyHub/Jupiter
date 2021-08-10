@@ -1,5 +1,14 @@
 version: '3.8'
 services:
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379': '6379'
+    volumes:
+      - redis:/data/redis
+    networks:
+      - jupiter_net
+
   postgres:
     image: 'postgres'
     environment:
@@ -8,9 +17,9 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - postgres:/data/db
+      - postgres:/data/postgres
     networks:
-      - postgres_net
+      - jupiter_net
 
   server:
     build:
@@ -23,17 +32,19 @@ services:
       DB_USER: 'jupiter'
       DB_PASSWORD: '123456'
       DB_HOST: postgres
+      SECRET_KEY: 'JUPITER'
     volumes:
       - ./src:/app/src
       - /app/node_modules
     networks:
-      - postgres_net
+      - jupiter_net
     depends_on:
       - postgres
+      - redis
 
 volumes:
   postgres:
 
 networks:
-  postgres_net:
+  jupiter_net:
     driver: bridge
