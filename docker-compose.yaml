@@ -13,7 +13,9 @@ services:
       - postgres_net
 
   server:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
     environment:
@@ -22,8 +24,8 @@ services:
       DB_PASSWORD: '123456'
       DB_HOST: postgres
     volumes:
-      - .:/jupiter
-      - /jupiter/node_modules
+      - ./src:/app/src
+      - /app/node_modules
     networks:
       - postgres_net
     depends_on:
