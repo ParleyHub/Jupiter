@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
 
-import changePasswordService from './services';
+import changePasswordServices from './services';
 
 import type { ChangePasswordType } from './types';
 
-const changePasswordController = async (
+const changePasswordControllers = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { email, oldPassword, newPassword } = req.body;
     const payload: ChangePasswordType = {
       email,
-      password,
-      confirmPassword,
+      oldPassword,
+      newPassword,
     };
-    const changePasswordResult = await changePasswordService(payload);
+    const changePasswordResult = await changePasswordServices(payload);
 
     res.status(200).json({
       message: changePasswordResult,
@@ -27,4 +27,4 @@ const changePasswordController = async (
   }
 };
 
-export default changePasswordController;
+export default changePasswordControllers;

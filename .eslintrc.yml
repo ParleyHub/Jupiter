@@ -16,6 +16,7 @@ extends:
 rules:
   import/extensions: 'off'
   object-curly-newline: 'off'
+  comma-dangle: 'off'
 ignorePatterns:
   - 'dist/**/*.js'
   - 'dist/*.js'

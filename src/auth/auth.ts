@@ -4,6 +4,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+import redisClient from '../redis';
+
 dotenv.config();
 
 type GenericObject = { [key: string]: string };
@@ -24,7 +26,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   const secretKey: string = process.env.SECRET_KEY || '';
 
   if (!authHeader) {
-    res.status(403).json({ message: 'No token provided.' });
+    res.status(401).json({ message: 'No token provided.' });
 
     return;
   }
@@ -34,13 +36,25 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   jwt.verify(token, secretKey, (error) => {
     if (error) {
       res.status(401).json({
-        message: 'Failed to authenticate token.',
+        message: 'Failed to authenticate.',
       });
 
       return;
     }
 
-    next();
+    const decoded: any = jwt.decode(token);
+
+    redisClient.get(decoded.id, (err, value) => {
+      if (err || !value) {
+        res.status(401).json({ message: 'Failed to authenticate.' });
+
+        return;
+      }
+
+      if (token === value) {
+        next();
+      }
+    });
   });
 };
 

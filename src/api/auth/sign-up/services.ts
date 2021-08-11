@@ -10,7 +10,7 @@ import type { SignUpDataType } from './types';
 const signUpService = async (payload: SignUpDataType): Promise<string> => {
   const { email, name, password, confirmPassword } = payload;
 
-  if (validator.isEmpty(email)) {
+  if (!email) {
     throw new Error('The email field is blank.');
   }
 
@@ -18,7 +18,7 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
     throw new Error('The email field is invalid.');
   }
 
-  if (validator.isEmpty(name)) {
+  if (!name) {
     throw new Error('The name field is blank.');
   }
 
@@ -26,7 +26,7 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
     throw new Error('The name field has at least 8 characters.');
   }
 
-  if (validator.isEmpty(password)) {
+  if (!password) {
     throw new Error('The password field is blank.');
   }
 
@@ -34,7 +34,7 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
     throw new Error('The password field has at least 8 characters.');
   }
 
-  if (validator.isEmpty(confirmPassword)) {
+  if (!confirmPassword) {
     throw new Error('The confirm password field is blank.');
   }
 
@@ -60,7 +60,16 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
 
   const token: string = auth.signToken({ id: user.id });
 
-  if (token) redisClient.set(user.id, token);
+  if (token) {
+    const isTokenSet = signUpRepository.saveTokenToRedis({
+      id: user.id,
+      token,
+    });
+
+    if (!isTokenSet) {
+      throw new Error('Error happened.');
+    }
+  }
 
   return token;
 };

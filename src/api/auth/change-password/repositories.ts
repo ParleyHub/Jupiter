@@ -17,9 +17,12 @@ const findUser = async (payload: ChangePasswordType): Promise<any> => {
 };
 
 const changePassword = async (payload: ChangePasswordType): Promise<any> => {
-  const { email, password } = payload;
+  const { email, newPassword } = payload;
 
-  const user = await User.update({ password }, { where: { email } });
+  const user = await User.update(
+    { password: newPassword },
+    { where: { email } }
+  );
 
   return user;
 };

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import db from '../../../database/models';
+import redisClient from '../../../redis';
 
-import type { SignUpDataType } from './types';
+import type { SignUpDataType, RedisPayloadType } from './types';
 
 const DB: any = db;
 const { User } = DB;
@@ -30,7 +31,15 @@ const createUser = async (
   return user;
 };
 
+const saveTokenToRedis = (payload: RedisPayloadType): boolean => {
+  const { id, token } = payload;
+  const isTokenSet = redisClient.set(id, token);
+
+  return isTokenSet;
+};
+
 export default {
   findUser,
   createUser,
+  saveTokenToRedis,
 };

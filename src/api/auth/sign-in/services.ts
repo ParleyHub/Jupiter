@@ -4,14 +4,13 @@ import bcrypt from 'bcrypt';
 
 import signInRepository from './repositories';
 import auth from '../../../auth';
-import redisClient from '../../../redis';
 
 import type { SignInDataType } from './types';
 
 const signInService = async (payload: SignInDataType): Promise<string> => {
   const { email, password } = payload;
 
-  if (validator.isEmpty(email)) {
+  if (!email) {
     throw new Error('The email field is blank.');
   }
 
@@ -19,7 +18,7 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
     throw new Error('The email field is invalid.');
   }
 
-  if (validator.isEmpty(password)) {
+  if (!password) {
     throw new Error('The password field is blank.');
   }
 
@@ -41,7 +40,16 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
 
   const token: string = auth.signToken({ id: user.id });
 
-  if (token) redisClient.set(user.id, token);
+  if (token) {
+    const isTokenSet = signInRepository.saveTokenToRedis({
+      id: user.id,
+      token,
+    });
+
+    if (!isTokenSet) {
+      throw new Error('Error happened.');
+    }
+  }
 
   return token;
 };
