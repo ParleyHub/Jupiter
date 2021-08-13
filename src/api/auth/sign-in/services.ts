@@ -5,9 +5,11 @@ import bcrypt from 'bcrypt';
 import signInRepository from './repositories';
 import auth from '../../../auth';
 
-import type { SignInDataType } from './types';
+import type { SignInDataType, SignInResponseType } from './types';
 
-const signInService = async (payload: SignInDataType): Promise<string> => {
+const signInService = async (
+  payload: SignInDataType
+): Promise<SignInResponseType> => {
   const { email, password } = payload;
 
   if (!email) {
@@ -39,7 +41,6 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
   }
 
   const accessToken: string = auth.signToken({ id: user.id });
-  const refreshToken: string = auth.signRefreshToken({ id: user.id });
 
   if (accessToken) {
     const isTokenSet = signInRepository.saveTokenToRedis({
@@ -52,7 +53,23 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
     }
   }
 
-  return accessToken;
+  const refreshToken: string = auth.signRefreshToken({ id: user.id });
+
+  if (refreshToken) {
+    const isTokenSet = signInRepository.saveTokenToRedis({
+      id: `refresh-token:${user.id}`,
+      token: refreshToken,
+    });
+
+    if (!isTokenSet) {
+      throw new Error('Error happened.');
+    }
+  }
+
+  return {
+    'access-token': accessToken,
+    'refresh-token': refreshToken,
+  };
 };
 
 export default signInService;

@@ -9,3 +9,8 @@ export interface RedisPayloadType {
   id: string;
   token: string;
 }
+
+export interface SignUpResponseType {
+  'access-token': string;
+  'refresh-token': string;
+}

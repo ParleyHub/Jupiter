@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import signUpService from './services';
 
-import type { SignUpDataType } from './types';
+import type { SignUpDataType, SignUpResponseType } from './types';
 
 const signUpController = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -15,9 +15,9 @@ const signUpController = async (req: Request, res: Response): Promise<void> => {
       confirmPassword,
     };
 
-    const token = await signUpService(payload);
+    const response: SignUpResponseType = await signUpService(payload);
 
-    res.status(201).json({ 'access-token': token });
+    res.status(201).json(response);
   } catch (error) {
     res.status(400).json({
       message: error.message,

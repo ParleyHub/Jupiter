@@ -3,6 +3,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { v4 as uuidv4 } from 'uuid';
 
 import redisClient from '../redis';
 
@@ -21,6 +22,10 @@ const signToken = (payload: GenericObject): string => {
 };
 
 const signRefreshToken = (payload: GenericObject): string => {
+  const newPayload = {
+    ...payload,
+    string: uuidv4(),
+  };
   const secretKeyRefreshToken: string =
     process.env.SECRET_KEY_REFRESH_TOKEN || '';
 
@@ -28,11 +33,15 @@ const signRefreshToken = (payload: GenericObject): string => {
     expiresIn: 1000 * 60 * 60 * 2,
   };
 
-  return jwt.sign(payload, secretKeyRefreshToken, options);
+  return jwt.sign(newPayload, secretKeyRefreshToken, options);
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
+const verifyAccessToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader: string = req.get('Authorization') || '';
   const secretKey: string = process.env.SECRET_KEY || '';
 
@@ -55,7 +64,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
 
     const decoded: any = jwt.decode(token);
 
-    redisClient.get(decoded.id, (err, value) => {
+    redisClient.get(`access-token:${decoded.id}`, (err, value) => {
       if (err || !value) {
         res.status(401).json({ message: 'Failed to authenticate.' });
 
@@ -72,5 +81,5 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
 export default {
   signToken,
   signRefreshToken,
-  verifyToken,
+  verifyAccessToken,
 };

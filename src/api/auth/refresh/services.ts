@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import jwt from 'jsonwebtoken';
-
 import refreshTokenRepositories from './repositories';
 
 const refreshTokenService = (refreshToken: string): boolean => {

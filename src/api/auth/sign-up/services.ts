@@ -3,11 +3,12 @@ import _ from 'lodash';
 
 import signUpRepository from './repositories';
 import auth from '../../../auth';
-import redisClient from '../../../redis';
 
-import type { SignUpDataType } from './types';
+import type { SignUpDataType, SignUpResponseType } from './types';
 
-const signUpService = async (payload: SignUpDataType): Promise<string> => {
+const signUpService = async (
+  payload: SignUpDataType
+): Promise<SignUpResponseType> => {
   const { email, name, password, confirmPassword } = payload;
 
   if (!email) {
@@ -58,12 +59,12 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
     throw new Error('Something happened.');
   }
 
-  const token: string = auth.signToken({ id: user.id });
+  const accessToken: string = auth.signToken({ id: user.id });
 
-  if (token) {
+  if (accessToken) {
     const isTokenSet = signUpRepository.saveTokenToRedis({
       id: `access-token:${user.id}`,
-      token,
+      token: accessToken,
     });
 
     if (!isTokenSet) {
@@ -71,7 +72,23 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
     }
   }
 
-  return token;
+  const refreshToken: string = auth.signRefreshToken({ id: user.id });
+
+  if (refreshToken) {
+    const isTokenSet = signUpRepository.saveTokenToRedis({
+      id: `refresh-token:${user.id}`,
+      token: refreshToken,
+    });
+
+    if (!isTokenSet) {
+      throw new Error('Error happened.');
+    }
+  }
+
+  return {
+    'access-token': accessToken,
+    'refresh-token': refreshToken,
+  };
 };
 
 export default signUpService;
