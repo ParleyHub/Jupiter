@@ -16,7 +16,7 @@ const logoutService = (bearer: string): boolean => {
     throw new Error('Error happened.');
   }
 
-  return logoutRepositories.removeTokenInRedis(decoded.id);
+  return logoutRepositories.removeTokenInRedis(`access-token:${decoded.id}`);
 };
 
 export default logoutService;

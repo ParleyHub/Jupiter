@@ -17,7 +17,7 @@ const signUpController = async (req: Request, res: Response): Promise<void> => {
 
     const token = await signUpService(payload);
 
-    res.status(201).json({ token });
+    res.status(201).json({ 'access-token': token });
   } catch (error) {
     res.status(400).json({
       message: error.message,

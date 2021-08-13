@@ -14,10 +14,21 @@ const signToken = (payload: GenericObject): string => {
   const secretKey: string = process.env.SECRET_KEY || '';
 
   const options = {
-    expiresIn: '1h',
+    expiresIn: 1000 * 60 * 15,
   };
 
   return jwt.sign(payload, secretKey, options);
+};
+
+const signRefreshToken = (payload: GenericObject): string => {
+  const secretKeyRefreshToken: string =
+    process.env.SECRET_KEY_REFRESH_TOKEN || '';
+
+  const options = {
+    expiresIn: 1000 * 60 * 60 * 2,
+  };
+
+  return jwt.sign(payload, secretKeyRefreshToken, options);
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -60,5 +71,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
 
 export default {
   signToken,
+  signRefreshToken,
   verifyToken,
 };

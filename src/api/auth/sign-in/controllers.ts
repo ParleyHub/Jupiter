@@ -11,10 +11,10 @@ const signInController = async (req: Request, res: Response): Promise<void> => {
       email,
       password,
     };
-    const signInResult = await signInService(payload);
+    const token = await signInService(payload);
 
     res.status(200).json({
-      message: signInResult,
+      'access-token': token,
     });
   } catch (error) {
     res.status(400).json({

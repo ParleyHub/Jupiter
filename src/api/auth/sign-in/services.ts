@@ -38,12 +38,13 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
     throw new Error('The password incorrect.');
   }
 
-  const token: string = auth.signToken({ id: user.id });
+  const accessToken: string = auth.signToken({ id: user.id });
+  const refreshToken: string = auth.signRefreshToken({ id: user.id });
 
-  if (token) {
+  if (accessToken) {
     const isTokenSet = signInRepository.saveTokenToRedis({
-      id: user.id,
-      token,
+      id: `access-token:${user.id}`,
+      token: accessToken,
     });
 
     if (!isTokenSet) {
@@ -51,7 +52,7 @@ const signInService = async (payload: SignInDataType): Promise<string> => {
     }
   }
 
-  return token;
+  return accessToken;
 };
 
 export default signInService;

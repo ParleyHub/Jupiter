@@ -62,7 +62,7 @@ const signUpService = async (payload: SignUpDataType): Promise<string> => {
 
   if (token) {
     const isTokenSet = signUpRepository.saveTokenToRedis({
-      id: user.id,
+      id: `access-token:${user.id}`,
       token,
     });
 
