@@ -6,11 +6,11 @@ import bcrypt from 'bcrypt';
 
 import changePasswordRepositories from './repositories';
 
-import type { ChangePasswordType } from './types';
+import type { ChangePasswordType, IChangePasswordResponseType } from './types';
 
 const changePasswordServices = async (
   payload: ChangePasswordType
-): Promise<string> => {
+): Promise<IChangePasswordResponseType> => {
   const { email, oldPassword, newPassword } = payload;
 
   if (!email) {
@@ -55,7 +55,9 @@ const changePasswordServices = async (
 
   await changePasswordRepositories.changePassword(payload);
 
-  return 'The password changed.';
+  return {
+    message: 'The password changed.',
+  };
 };
 
 export default changePasswordServices;

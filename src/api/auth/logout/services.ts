@@ -3,7 +3,9 @@ import jwt from 'jsonwebtoken';
 
 import logoutRepositories from './repositories';
 
-const logoutService = (bearer: string): boolean => {
+import type { ILogoutResponseType } from './types';
+
+const logoutService = async (bearer: string): Promise<ILogoutResponseType> => {
   if (!bearer) {
     throw new Error('No token provided.');
   }
@@ -16,7 +18,15 @@ const logoutService = (bearer: string): boolean => {
     throw new Error('Error happened.');
   }
 
-  return logoutRepositories.removeTokenInRedis(decoded.id);
+  const isDelete = await logoutRepositories.removeTokenInRedis(decoded.id);
+
+  if (!isDelete) {
+    throw new Error('Error happened.');
+  }
+
+  return {
+    message: 'Signed Out',
+  };
 };
 
 export default logoutService;

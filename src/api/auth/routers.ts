@@ -4,6 +4,8 @@ import signInController from './sign-in/controllers';
 import signUpController from './sign-up/controllers';
 import changePasswordController from './change-password/controllers';
 import logoutController from './logout/controllers';
+import refreshTokenController from './refresh/controllers';
+import forgotPasswordControllers from './forgot/controllers';
 
 import auth from '../../auth';
 
@@ -17,5 +19,7 @@ authRouters
   .put(auth.verifyAccessToken, changePasswordController);
 
 authRouters.route('/logout').post(auth.verifyAccessToken, logoutController);
+authRouters.route('/refresh-token').post(refreshTokenController);
+authRouters.route('/forgot-password').post(forgotPasswordControllers);
 
 export default authRouters;

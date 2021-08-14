@@ -17,9 +17,7 @@ const changePasswordControllers = async (
     };
     const changePasswordResult = await changePasswordServices(payload);
 
-    res.status(200).json({
-      message: changePasswordResult,
-    });
+    res.status(200).json(changePasswordResult);
   } catch (error) {
     res.status(400).json({
       message: error.message,

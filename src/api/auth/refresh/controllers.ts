@@ -1,21 +1,22 @@
+/* eslint-disable operator-linebreak */
 import { Request, Response } from 'express';
 
 import refreshTokenService from './services';
+
+import type { RequestBodyType } from './types';
 
 const refreshTokenController = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const refreshToken: string = req.body('refresh-token');
+    const { 'refresh-token': refreshToken }: RequestBodyType = req.body;
 
-    const token = refreshTokenService(refreshToken);
+    const response = await refreshTokenService(refreshToken);
 
-    res.status(200).json({
-      token,
-    });
+    res.status(200).json(response);
   } catch (error) {
-    res.status(400).json({
+    res.status(401).json({
       message: error.message,
     });
   }

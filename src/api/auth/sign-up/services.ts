@@ -62,12 +62,12 @@ const signUpService = async (
   const accessToken: string = auth.signToken({ id: user.id });
 
   if (accessToken) {
-    const isTokenSet = signUpRepository.saveTokenToRedis({
+    const isTokenSet = await signUpRepository.saveTokenToRedis({
       id: `access-token:${user.id}`,
       token: accessToken,
     });
 
-    if (!isTokenSet) {
+    if (!isTokenSet || isTokenSet !== 'OK') {
       throw new Error('Error happened.');
     }
   }
@@ -75,12 +75,12 @@ const signUpService = async (
   const refreshToken: string = auth.signRefreshToken({ id: user.id });
 
   if (refreshToken) {
-    const isTokenSet = signUpRepository.saveTokenToRedis({
+    const isTokenSet = await signUpRepository.saveTokenToRedis({
       id: `refresh-token:${user.id}`,
       token: refreshToken,
     });
 
-    if (!isTokenSet) {
+    if (!isTokenSet || isTokenSet !== 'OK') {
       throw new Error('Error happened.');
     }
   }

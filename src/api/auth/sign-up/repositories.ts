@@ -31,12 +31,18 @@ const createUser = async (
   return user;
 };
 
-const saveTokenToRedis = (payload: RedisPayloadType): boolean => {
-  const { id, token } = payload;
-  const isTokenSet = redisClient.set(id, token);
+const saveTokenToRedis = (payload: RedisPayloadType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const { id, token } = payload;
 
-  return isTokenSet;
-};
+    redisClient.set(id, token, (error, reply) => {
+      if (error) {
+        return reject(error);
+      }
+
+      return resolve(reply);
+    });
+  });
 
 export default {
   findUser,

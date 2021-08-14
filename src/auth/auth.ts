@@ -15,7 +15,7 @@ const signToken = (payload: GenericObject): string => {
   const secretKey: string = process.env.SECRET_KEY || '';
 
   const options = {
-    expiresIn: 1000 * 60 * 15,
+    expiresIn: '15m',
   };
 
   return jwt.sign(payload, secretKey, options);
@@ -30,7 +30,7 @@ const signRefreshToken = (payload: GenericObject): string => {
     process.env.SECRET_KEY_REFRESH_TOKEN || '';
 
   const options = {
-    expiresIn: 1000 * 60 * 60 * 2,
+    expiresIn: '2h',
   };
 
   return jwt.sign(newPayload, secretKeyRefreshToken, options);
@@ -43,7 +43,6 @@ const verifyAccessToken = (
   next: NextFunction
 ): void => {
   const authHeader: string = req.get('Authorization') || '';
-  const secretKey: string = process.env.SECRET_KEY || '';
 
   if (!authHeader) {
     res.status(401).json({ message: 'No token provided.' });
@@ -52,6 +51,7 @@ const verifyAccessToken = (
   }
 
   const token = authHeader.replace('Bearer ', '');
+  const secretKey: string = process.env.SECRET_KEY || '';
 
   jwt.verify(token, secretKey, (error) => {
     if (error) {
