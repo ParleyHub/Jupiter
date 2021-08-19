@@ -16,3 +16,4 @@ require:
 recursive: true
 spec:
   - './src/test/*.ts'
+bail: true
