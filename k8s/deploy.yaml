@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupiter-api
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 3000
+  selector:
+    app: jupiter-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupiter-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupiter-api
+  template:
+    metadata:
+      labels:
+        app: jupiter-api
+    spec:
+      containers:
+        - name: jupiter-api
+          image: <IMAGE>
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '300m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: PORT
+              value: '$PORT'
+            - name: DB_NAME
+              value: '$DB_NAME'
+            - name: DB_USERNAME
+              value: '$DB_USERNAME'
+            - name: DB_PASSWORD
+              value: '$DB_PASSWORD'
+            - name: DB_HOST
+              value: '$DB_HOST'
+            - name: DB_PORT
+              value: '$DB_PORT'
