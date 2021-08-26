@@ -62,4 +62,4 @@ jobs:
         env:
           IMAGE_TAG: asia.gcr.io/${{secrets.GKE_PROJECT}}/jupiter:${{steps.tag.outputs.number}}
           NAME_CI: jupiter
-          DOMAIN: parley-hub.com
+          DOMAIN: api.parley-hub.com
