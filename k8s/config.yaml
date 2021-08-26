@@ -59,11 +59,11 @@ spec:
               readOnly: true
           resources:
             limits:
-              memory: 1Gi
-              cpu: '1'
-            requests:
               memory: 512Mi
               cpu: '0.5'
+            requests:
+              memory: 256Mi
+              cpu: '0.25'
 
       volumes:
         - name: cloudsql-instance-secret
