@@ -24,10 +24,10 @@ spec:
           resources:
             limits:
               memory: 512Mi
-              cpu: '0.5'
+              cpu: '0.4'
             requests:
               memory: 256Mi
-              cpu: '0.25'
+              cpu: '0.2'
           env:
             - name: DB_USER
               valueFrom:
@@ -46,7 +46,7 @@ spec:
                   key: database
 
         - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.24
+          image: gcr.io/cloudsql-docker/gce-proxy:1.24.0
           command:
             - '/cloud_sql_proxy'
             - '-instances=parleyhub-323409:asia-east2:jupiter'
@@ -60,10 +60,10 @@ spec:
           resources:
             limits:
               memory: 512Mi
-              cpu: '0.5'
+              cpu: '0.4'
             requests:
               memory: 256Mi
-              cpu: '0.25'
+              cpu: '0.2'
 
       volumes:
         - name: cloudsql-instance-secret
