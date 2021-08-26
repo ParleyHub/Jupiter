@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import db from '../../../database/models';
 
-import type { ChangePasswordType } from './types';
+import type { IChangePasswordType } from './types';
 
 const DB: any = db;
 const { User } = DB;
 
-const findUser = async (payload: ChangePasswordType): Promise<any> => {
+const findUser = async (payload: IChangePasswordType): Promise<any> => {
   const { email } = payload;
 
   const isEmailExist = await User.findOne({
@@ -16,7 +16,7 @@ const findUser = async (payload: ChangePasswordType): Promise<any> => {
   return isEmailExist;
 };
 
-const changePassword = async (payload: ChangePasswordType): Promise<any> => {
+const changePassword = async (payload: IChangePasswordType): Promise<any> => {
   const { email, newPassword } = payload;
 
   const user = await User.update(

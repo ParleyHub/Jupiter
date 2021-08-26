@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $NAME_CI
+  namespace: default
+  labels:
+    name: $NAME_CI
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: $NAME_CI
+  template:
+    metadata:
+      labels:
+        name: $NAME_CI
+    spec:
+      containers:
+        - name: $NAME_CI
+          image: $IMAGE_TAG
+          ports:
+            - containerPort: 3000
+
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: '0.5'
+            requests:
+              memory: 256Mi
+              cpu: '0.25'
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: database
+
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.24
+          command:
+            - '/cloud_sql_proxy'
+            - '-instances=parleyhub-323409:asia-east2:jupiter'
+            - '-credential_file=/secrets/credentials.json'
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - name: cloudsql-instance-secret
+              mountPath: /secrets/
+              readOnly: true
+          resources:
+            limits:
+              memory: 1024Mi
+              cpu: '1'
+            requests:
+              memory: 512Mi
+              cpu: '0.5'
+
+      volumes:
+        - name: cloudsql-instance-secret
+          secret:
+            secretName: cloudsql-instance-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: $NAME_CI
+  name: $NAME_CI
+spec:
+  type: ClusterIP
+  selector:
+    name: $NAME_CI
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: $NAME_CI
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.allow-http: 'false'
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  namespace: default
+spec:
+  tls:
+    - hosts:
+        - $DOMAIN
+      secretName: jupiter-secret-tls
+  rules:
+    - host: $DOMAIN
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: $NAME_CI
+                port:
+                  number: 80

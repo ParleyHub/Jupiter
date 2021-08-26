@@ -1,24 +1,30 @@
 FROM node:16.6.1-alpine as builder
 
-WORKDIR /app/
+ENV APP=/app/
 
-COPY package.json yarn.lock /app/
+WORKDIR ${APP}
 
-RUN yarn install
+COPY package.json yarn.lock ${APP}
+
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
+RUN yarn test
 RUN yarn build
 
 FROM node:16.6.1-alpine
 
-WORKDIR /app/
+ENV APP=/app/
+ENV BUILD=/app/dist
 
-COPY package.json yarn.lock pm2.config.js /app/
+WORKDIR ${APP}
 
-RUN yarn install --production
+COPY package.json yarn.lock pm2.config.js ${APP}
 
-COPY --from=builder /app/dist /app/
+RUN yarn install --production --frozen-lockfile
+
+COPY --from=builder ${BUILD} ${APP}
 
 EXPOSE 3000
 

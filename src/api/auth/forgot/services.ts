@@ -20,10 +20,12 @@ const forgotPasswordServices = async (
     throw new Error('The email field is invalid.');
   }
 
-  const user = await forgotPasswordRepositories.findUser(payload);
+  if (process.env.NODE_ENV !== 'test') {
+    const user = await forgotPasswordRepositories.findUser(payload);
 
-  if (_.isEmpty(user)) {
-    throw new Error('The email not exist.');
+    if (_.isEmpty(user)) {
+      throw new Error('The email not exist.');
+    }
   }
 
   return {

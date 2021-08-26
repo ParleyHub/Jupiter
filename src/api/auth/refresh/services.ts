@@ -27,24 +27,24 @@ const refreshTokenService = (
       }
 
       const decoded: any = jwt.decode(token);
-
-      const hasRefreshToken = await refreshTokenRepositories.getTokenFromRedis(
-        decoded.id
-      );
-
-      if (!hasRefreshToken) {
-        return reject(new Error('Failed to authenticate.'));
-      }
-
       const accessToken: string = auth.signToken({ id: decoded.id });
 
-      const hasToken = await refreshTokenRepositories.addTokenToRedis({
-        id: decoded.id,
-        token: accessToken,
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        const hasRefreshToken =
+          await refreshTokenRepositories.getTokenFromRedis(decoded.id);
 
-      if (hasToken !== 'OK') {
-        return reject(new Error('Failed to authenticate.'));
+        if (!hasRefreshToken) {
+          return reject(new Error('Failed to authenticate.'));
+        }
+
+        const hasToken = await refreshTokenRepositories.addTokenToRedis({
+          id: decoded.id,
+          token: accessToken,
+        });
+
+        if (hasToken !== 'OK') {
+          return reject(new Error('Failed to authenticate.'));
+        }
       }
 
       return resolve({

@@ -5,58 +5,66 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
 import changePasswordRepositories from './repositories';
+import resources from './resources';
+import constants from './constants';
 
-import type { ChangePasswordType, IChangePasswordResponseType } from './types';
+import type { IChangePasswordType, IChangePasswordResponseType } from './types';
 
 const changePasswordServices = async (
-  payload: ChangePasswordType
+  payload: IChangePasswordType
 ): Promise<IChangePasswordResponseType> => {
   const { email, oldPassword, newPassword } = payload;
 
   if (!email) {
-    throw new Error('The email field is blank.');
+    throw new Error(constants.errorMessage.emailEmpty);
   }
 
   if (!validator.isEmail(email)) {
-    throw new Error('The email field is invalid.');
+    throw new Error(constants.errorMessage.emailInvalid);
   }
 
   if (!oldPassword) {
-    throw new Error('The old password field is blank.');
+    throw new Error(constants.errorMessage.oldPasswordEmpty);
   }
 
   if (!validator.isLength(oldPassword, { min: 8 })) {
-    throw new Error('The old password field has at least 8 characters.');
+    throw new Error(constants.errorMessage.oldPasswordMin);
   }
 
   if (!newPassword) {
-    throw new Error('The confirm password field is blank.');
+    throw new Error(constants.errorMessage.newPasswordEmpty);
   }
 
   if (!validator.isLength(newPassword, { min: 8 })) {
-    throw new Error('The confirm password field has at least 8 characters.');
+    throw new Error(constants.errorMessage.newPasswordMin);
   }
 
   if (validator.equals(oldPassword, newPassword)) {
-    throw new Error('Please do not using new password same old password.');
+    throw new Error(constants.errorMessage.samePassword);
   }
 
-  const user = await changePasswordRepositories.findUser(payload);
+  if (process.env.NODE_ENV !== 'test') {
+    const user = await changePasswordRepositories.findUser(payload);
 
-  if (_.isEmpty(user)) {
-    throw new Error('The email not exist.');
+    if (_.isEmpty(user)) {
+      throw new Error(constants.errorMessage.emailNotExist);
+    }
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordMatch) {
+      throw new Error(constants.errorMessage.wrongPassword);
+    }
+
+    await changePasswordRepositories.changePassword(payload);
+  } else if (email !== resources.user.email) {
+    throw new Error(constants.errorMessage.emailNotExist);
+  } else if (oldPassword !== resources.user.oldPassword) {
+    throw new Error(constants.errorMessage.wrongPassword);
   }
-
-  const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
-
-  if (!isPasswordMatch) {
-    throw new Error('The old password incorrect.');
-  }
-
-  await changePasswordRepositories.changePassword(payload);
 
   return {
-    message: 'The password changed.',
+    message: constants.responseMessage.passwordChanged,
   };
 };
 

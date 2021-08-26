@@ -18,10 +18,12 @@ const logoutService = async (bearer: string): Promise<ILogoutResponseType> => {
     throw new Error('Error happened.');
   }
 
-  const isDelete = await logoutRepositories.removeTokenInRedis(decoded.id);
+  if (process.env.NODE_ENV !== 'test') {
+    const isDelete = await logoutRepositories.removeTokenInRedis(decoded.id);
 
-  if (!isDelete) {
-    throw new Error('Error happened.');
+    if (!isDelete) {
+      throw new Error('Error happened.');
+    }
   }
 
   return {

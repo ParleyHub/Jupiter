@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import changePasswordServices from './services';
 
-import type { ChangePasswordType } from './types';
+import type { IChangePasswordType } from './types';
 
 const changePasswordControllers = async (
   req: Request,
@@ -10,7 +10,7 @@ const changePasswordControllers = async (
 ): Promise<void> => {
   try {
     const { email, oldPassword, newPassword } = req.body;
-    const payload: ChangePasswordType = {
+    const payload: IChangePasswordType = {
       email,
       oldPassword,
       newPassword,

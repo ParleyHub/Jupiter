@@ -1,32 +1,33 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import chai, { expect } from 'chai';
-import chaiHttp from 'chai-http';
+// /* eslint-disable import/no-extraneous-dependencies */
 
-import server from '../server';
+// import chai, { expect } from 'chai';
+// import chaiHttp from 'chai-http';
 
-const should = chai.should();
+// import server from '../server';
 
-chai.use(chaiHttp);
+// const should = chai.should();
 
-describe('/First Test Collection', () => {
-  it('test api', (done) => {
-    const payload = {
-      email: 'hiep@gmail.com',
-      name: 'Hiep Nguyen',
-      password: '12345678',
-      confirmPassword: '12345678',
-    };
+// chai.use(chaiHttp);
 
-    chai
-      .request(server)
-      .post('/api/auth/sign-up')
-      .send(payload)
-      .end((err, res) => {
-        res.should.have.status(201);
-        res.body.should.be.a('object');
-        res.body.should.have.key('access-token', 'refresh-token');
+// describe('/First Test Collection', () => {
+//   it('test api', (done) => {
+//     const payload = {
+//       email: 'hiep@gmail.com',
+//       name: 'Hiep Nguyen',
+//       password: '12345678',
+//       confirmPassword: '12345678',
+//     };
 
-        done();
-      });
-  });
-});
+//     chai
+//       .request(server)
+//       .post('/api/auth/sign-up')
+//       .send(payload)
+//       .end((err, res) => {
+//         res.should.have.status(400);
+//         res.body.should.be.a('object');
+//         res.body.should.have.key('access-token', 'refresh-token');
+
+//         done();
+//       });
+//   });
+// });

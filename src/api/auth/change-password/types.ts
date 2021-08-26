@@ -1,4 +1,4 @@
-export interface ChangePasswordType {
+export interface IChangePasswordType {
   email: string;
   oldPassword: string;
   newPassword: string;

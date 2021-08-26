@@ -16,4 +16,6 @@ module.exports = {
     host: process.env.POSTGRES_HOST,
     dialect: 'postgres',
   },
+
+  test: {},
 };

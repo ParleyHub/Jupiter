@@ -15,5 +15,5 @@ require:
   - 'ts-node/register'
 recursive: true
 spec:
-  - './src/test/*.ts'
+  - './src/**/*.test.ts'
 bail: true
