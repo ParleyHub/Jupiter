@@ -19,56 +19,67 @@ spec:
         - name: $NAME_CI
           image: $IMAGE_TAG
           ports:
-            - containerPort: 3000
+            - containerPort: 5000
 
           resources:
             limits:
               memory: 512Mi
-              cpu: '0.4'
+              cpu: '0.5'
             requests:
               memory: 256Mi
-              cpu: '0.2'
+              cpu: '0.3'
+
           env:
-            - name: DB_USER
+            - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: jupiter-secret-postgres
                   key: username
-            - name: DB_PASS
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: jupiter-secret-postgres
                   key: password
-            - name: DB_NAME
+            - name: POSTGRES_SCHEMA
               valueFrom:
                 secretKeyRef:
                   name: jupiter-secret-postgres
                   key: database
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: host
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: jupiter-config-map-redis
+                  key: REDIS_HOST
 
         - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.24.0
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
           command:
             - '/cloud_sql_proxy'
-            - '-instances=parleyhub-323409:asia-east2:jupiter'
-            - '-credential_file=/secrets/credentials.json'
+            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
+            - '-credential_file=/secrets/cloudsql/credentials.json'
           securityContext:
             runAsNonRoot: true
           volumeMounts:
-            - name: cloudsql-instance-secret
-              mountPath: /secrets/
+            - name: $NAME_CI
+              mountPath: /secrets/cloudsql
               readOnly: true
           resources:
             limits:
               memory: 512Mi
-              cpu: '0.4'
+              cpu: '0.5'
             requests:
               memory: 256Mi
-              cpu: '0.2'
+              cpu: '0.3'
 
       volumes:
-        - name: cloudsql-instance-secret
+        - name: $NAME_CI
           secret:
-            secretName: cloudsql-instance-secret
+            secretName: cloudsql-secret-sa
 
 ---
 apiVersion: v1
@@ -85,7 +96,7 @@ spec:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 5000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

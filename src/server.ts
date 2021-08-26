@@ -14,7 +14,7 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 const server = new http.Server(app);
-const PORT = 3000;
+const PORT = 5000;
 
 if (process.env.NODE_ENV !== 'test') {
   database.sequelize.sync();
