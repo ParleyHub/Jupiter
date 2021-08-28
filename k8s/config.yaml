@@ -52,8 +52,8 @@ spec:
                   key: host
             - name: REDIS_HOST
               valueFrom:
-                configMapKeyRef:
-                  name: jupiter-config-map-redis
+                secretKeyRef:
+                  name: jupiter-secret-redis
                   key: REDIS_HOST
 
         - name: cloud-sql-proxy
