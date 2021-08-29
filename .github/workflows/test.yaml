@@ -1,4 +1,4 @@
-name: Test
+name: Testing and bump version
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 16
       - run: yarn install --frozen-lockfile
-      - run: yarn test
+      - run: yarn test-all
 
   bump:
     if: github.ref == 'refs/heads/master'

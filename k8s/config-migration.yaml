@@ -13,6 +13,7 @@ spec:
             - /bin/sh
             - -c
             - |
+              echo pkill
               pkill sleep
               true
 
