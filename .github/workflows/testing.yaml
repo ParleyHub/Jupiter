@@ -1,4 +1,4 @@
-name: Testing and bump version
+name: Testing
 
 on:
   push:

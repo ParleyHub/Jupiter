@@ -12,7 +12,7 @@
     "check-lint": "eslint . --ext ts",
     "check-format": "prettier --check ./src",
     "check-types": "tsc --pretty --noEmit",
-    "test-all": "yarn check-lint && yarn check-format && check-types && yarn test",
+    "test-all": "yarn check-lint && yarn check-format && yarn check-types && yarn test",
     "prepare": "husky install"
   },
   "dependencies": {
