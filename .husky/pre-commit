@@ -5,33 +5,54 @@ echo '📦 📦 📦'
 echo 'Styling, testing and building your project before committing.'
 
 # Check Prettier standards
+echo '👮🏼‍♀️👮🏼‍♀️👮🏼‍♀️'
+echo 'Check Prettier standards...'
+
 yarn check-format ||
 (
   echo '🧨 🧨 🧨'
-  echo 'Prettier check Failed.'
+  echo 'Prettier check failed.'
 
   false;
 )
 
-# Check ESLint Standards
+# Check ESLint standards
+echo '👮🏼‍♀️👮🏼‍♀️👮🏼‍♀️'
+echo 'Check ESLint standards...'
+
 yarn check-lint ||
 (
   echo '🧨 🧨 🧨'
-  echo 'ESLint Check Failed.'
+  echo 'ESLint check failed.'
 
   false;
 )
 
-# Check tsconfig standards
+# Check TSconfig standards
+echo '👮🏼‍♀️👮🏼‍♀️👮🏼‍♀️'
+echo 'Check TSconfig standards...'
+
 yarn check-types ||
 (
   echo '🧨 🧨 🧨'
-  echo 'Failed Type check.'
+  echo 'Failed type check.'
 
   false;
 )
 
-# If everything passes... Now we can commit
+# Unit test
+echo '👮🏼‍♀️👮🏼‍♀️👮🏼‍♀️'
+echo 'Testing...'
+
+yarn test ||
+(
+  echo '🧨 🧨 🧨'
+  echo 'Testing failed.'
+
+  false;
+)
+
+# Building
 echo '🏗️ 🏗 🏗'
 echo 'Building...'
 
