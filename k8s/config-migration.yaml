@@ -7,21 +7,14 @@ spec:
   template:
     spec:
       containers:
-        - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command:
-            - '/cloud_sql_proxy'
-            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
-            - '-credential_file=/secrets/cloudsql/credentials.json'
-          securityContext:
-            runAsNonRoot: true
-          volumeMounts:
-            - name: $CI_NAME
-              mountPath: /secrets/cloudsql
-              readOnly: true
-
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
+          command:
+            - /bin/sh
+            - -c
+            - |
+              pkill sleep
+              true
 
           env:
             - name: NODE_ENV
@@ -46,6 +39,19 @@ spec:
                 secretKeyRef:
                   name: jupiter-secret-postgres
                   key: host
+
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command:
+            - '/cloud_sql_proxy'
+            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
+            - '-credential_file=/secrets/cloudsql/credentials.json'
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - name: $CI_NAME
+              mountPath: /secrets/cloudsql
+              readOnly: true
 
       volumes:
         - name: $CI_NAME

@@ -16,26 +16,6 @@ spec:
         name: $CI_NAME
     spec:
       containers:
-        - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command:
-            - '/cloud_sql_proxy'
-            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
-            - '-credential_file=/secrets/cloudsql/credentials.json'
-          securityContext:
-            runAsNonRoot: true
-          volumeMounts:
-            - name: $CI_NAME
-              mountPath: /secrets/cloudsql
-              readOnly: true
-          resources:
-            limits:
-              memory: 512Mi
-              cpu: '0.5'
-            requests:
-              memory: 256Mi
-              cpu: '0.3'
-
         - name: $CI_NAME
           image: $IMAGE_TAG
           ports:
@@ -77,6 +57,26 @@ spec:
                 secretKeyRef:
                   name: jupiter-secret-redis
                   key: REDIS_HOST
+
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command:
+            - '/cloud_sql_proxy'
+            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
+            - '-credential_file=/secrets/cloudsql/credentials.json'
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - name: $CI_NAME
+              mountPath: /secrets/cloudsql
+              readOnly: true
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: '0.5'
+            requests:
+              memory: 256Mi
+              cpu: '0.3'
 
       volumes:
         - name: $CI_NAME
