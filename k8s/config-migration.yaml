@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: $CI_NAME-migration
 spec:
+  backoffLimit: 0
   template:
     spec:
       containers:
@@ -18,13 +19,6 @@ spec:
             - name: $CI_NAME
               mountPath: /secrets/cloudsql
               readOnly: true
-          resources:
-            limits:
-              memory: 512Mi
-              cpu: '0.4'
-            requests:
-              memory: 256Mi
-              cpu: '0.2'
 
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
@@ -52,13 +46,6 @@ spec:
                 secretKeyRef:
                   name: jupiter-secret-postgres
                   key: host
-          resources:
-            limits:
-              memory: 512Mi
-              cpu: '0.4'
-            requests:
-              memory: 256Mi
-              cpu: '0.2'
 
       volumes:
         - name: $CI_NAME
