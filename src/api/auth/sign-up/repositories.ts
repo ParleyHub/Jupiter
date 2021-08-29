@@ -1,4 +1,6 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import db from '../../../database/models';
 import redisClient from '../../../redis';
 
@@ -31,8 +33,8 @@ const createUser = async (
   return user;
 };
 
-const saveTokenToRedis = (payload: RedisPayloadType): Promise<string> =>
-  new Promise((resolve, reject) => {
+const saveTokenToRedis = (payload: RedisPayloadType): Promise<string> => {
+  return new Promise((resolve, reject) => {
     const { id, token } = payload;
 
     redisClient.set(id, token, (error, reply) => {
@@ -43,6 +45,7 @@ const saveTokenToRedis = (payload: RedisPayloadType): Promise<string> =>
       return resolve(reply);
     });
   });
+};
 
 export default {
   findUser,

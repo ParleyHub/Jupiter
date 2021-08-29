@@ -1,4 +1,6 @@
 /* eslint-disable operator-linebreak */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Request, Response } from 'express';
 
 import refreshTokenService from './services';
@@ -15,7 +17,7 @@ const refreshTokenController = async (
     const response = await refreshTokenService(refreshToken);
 
     res.status(200).json(response);
-  } catch (error) {
+  } catch (error: any) {
     res.status(401).json({
       message: error.message,
     });

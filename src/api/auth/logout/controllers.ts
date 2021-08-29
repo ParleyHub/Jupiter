@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Request, Response } from 'express';
 
 import logoutService from './services';
@@ -9,7 +11,7 @@ const logoutController = async (req: Request, res: Response): Promise<void> => {
     const logoutResponse = await logoutService(authHeader);
 
     res.status(200).json(logoutResponse);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       message: error.message,
     });

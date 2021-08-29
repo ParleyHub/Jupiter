@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Request, Response } from 'express';
 
 import forgotPasswordServices from './services';
@@ -16,7 +18,7 @@ const forgotPasswordControllers = async (
     const changePasswordResult = await forgotPasswordServices(payload);
 
     res.status(200).json(changePasswordResult);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       message: error.message,
     });

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Request, Response } from 'express';
 
 import signUpService from './services';
@@ -18,7 +20,7 @@ const signUpController = async (req: Request, res: Response): Promise<void> => {
     const response: SignUpResponseType = await signUpService(payload);
 
     res.status(201).json(response);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       message: error.message,
     });

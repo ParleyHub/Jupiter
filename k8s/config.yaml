@@ -30,6 +30,8 @@ spec:
               cpu: '0.3'
 
           env:
+            - name: NODE_ENV
+              value: 'production'
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { expect } from 'chai';
 
 import constants from '../constants';
@@ -16,8 +18,10 @@ describe('Test for change password service', () => {
 
       // expect(await services(payload)).to.be.a('object');
       // expect(await services(payload)).to.have.property('message');
-    } catch (error) {
-      expect(error.message).to.be.equal(constants.errorMessage.emailEmpty);
+    } catch (error: any) {
+      if (error && error.message) {
+        expect(error.message).to.be.equal(constants.errorMessage.emailEmpty);
+      }
     }
   });
 
@@ -33,8 +37,10 @@ describe('Test for change password service', () => {
 
       // expect(await services(payload)).to.be.a('object');
       // expect(await services(payload)).to.have.property('message');
-    } catch (error) {
-      expect(error.message).to.be.equal(constants.errorMessage.emailEmpty);
+    } catch (error: any) {
+      if (error && error.message) {
+        expect(error.message).to.be.equal(constants.errorMessage.emailEmpty);
+      }
     }
   });
 });

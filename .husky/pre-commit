@@ -1,4 +1,48 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
+echo '📦 📦 📦'
+echo 'Styling, testing and building your project before committing.'
+
+# Check Prettier standards
+yarn check-format ||
+(
+  echo '🧨 🧨 🧨'
+  echo 'Prettier check Failed.'
+
+  false;
+)
+
+# Check ESLint Standards
+yarn check-lint ||
+(
+  echo '🧨 🧨 🧨'
+  echo 'ESLint Check Failed.'
+
+  false;
+)
+
+# Check tsconfig standards
+yarn check-types ||
+(
+  echo '🧨 🧨 🧨'
+  echo 'Failed Type check.'
+
+  false;
+)
+
+# If everything passes... Now we can commit
+echo '🏗️ 🏗 🏗'
+echo 'Building...'
+
+yarn build ||
+(
+  echo '🧨 🧨 🧨'
+  echo 'Build failed.'
+
+  false;
+)
+
+# If everything passes... Now we can commit
+echo '🚀 🚀 🚀'
+echo 'Committing...'

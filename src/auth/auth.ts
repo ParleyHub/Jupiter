@@ -1,5 +1,7 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-useless-return */
+
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';

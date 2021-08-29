@@ -1,5 +1,7 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import jwt from 'jsonwebtoken';
 
 import auth from '../../../auth';
