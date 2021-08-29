@@ -10,7 +10,7 @@
     "start": "pm2 start pm2.config.js --no-daemon",
     "test": "NODE_ENV=test mocha --config .mocharc.yaml",
     "check-lint": "eslint . --ext ts",
-    "check-format": "prettier --check .",
+    "check-format": "prettier --check ./src",
     "check-types": "tsc --pretty --noEmit",
     "prepare": "husky install"
   },
