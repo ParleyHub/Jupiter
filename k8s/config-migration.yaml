@@ -8,8 +8,6 @@ spec:
       containers:
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          lifecycle:
-            type: Sidecar
           command:
             - '/cloud_sql_proxy'
             - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
