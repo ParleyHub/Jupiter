@@ -1,4 +1,8 @@
-require('dotenv').config();
+console.log('env', process.env.NODE_ENV);
+console.log('user', process.env.POSTGRES_USER);
+console.log('password', process.env.POSTGRES_PASSWORD);
+console.log('host', process.env.POSTGRES_HOST);
+console.log('schema', process.env.POSTGRES_SCHEMA);
 
 module.exports = {
   development: {

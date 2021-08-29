@@ -2,12 +2,9 @@
 /* eslint-disable no-useless-return */
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 
 import redisClient from '../redis';
-
-dotenv.config();
 
 type GenericObject = { [key: string]: string };
 

@@ -1,0 +1,13 @@
+FROM node:16.6.1-alpine
+
+WORKDIR /app/
+
+COPY package.json yarn.lock /app/
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+WORKDIR /app/src/database
+
+CMD [ "npx", "sequelize-cli", "db:migrate" ]

@@ -1,14 +1,11 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 
 import auth from '../../../auth';
 import refreshTokenRepositories from './repositories';
 
 import type { RefreshTokenResponseType } from './types';
-
-dotenv.config();
 
 const refreshTokenService = (
   refreshToken: string

@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf dist/",
-    "dev": "NODE_ENV=development DEBUG=* nodemon src/server.ts",
+    "dev": "DEBUG=* nodemon src/server.ts",
     "build": "yarn clean && tsc",
     "start": "pm2 start pm2.config.js --no-daemon",
     "test": "NODE_ENV=test mocha --config .mocharc.yaml",
@@ -16,7 +16,6 @@
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
     "jsonwebtoken": "^8.5.1",

@@ -23,10 +23,26 @@ services:
     networks:
       - jupiter_net
 
+  migration:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.migration
+    environment:
+      POSTGRES_SCHEMA: 'jupiter'
+      POSTGRES_USER: 'jupiter'
+      POSTGRES_PASSWORD: '123456'
+      POSTGRES_HOST: postgres
+      NODE_ENV: 'development'
+    networks:
+      - jupiter_net
+    depends_on:
+      - postgres
+      - redis
+
   server:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: docker/Dockerfile.dev
     ports:
       - '5000:5000'
     environment:
@@ -37,6 +53,7 @@ services:
       REDIS_HOST: redis
       SECRET_KEY: 'JUPITER'
       SECRET_KEY_REFRESH_TOKEN: 'JUPITER_REFRESH_TOKEN'
+      NODE_ENV: 'development'
     volumes:
       - ./src:/app/src
       - /app/node_modules
@@ -45,6 +62,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - migration
 
 volumes:
   postgres:

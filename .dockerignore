@@ -1,5 +1,7 @@
 node_modules
-Dockerfile
-
+docker/
 .git/
+k8s/
+
+docker-compose.yaml
 .gitignore
