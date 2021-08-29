@@ -8,4 +8,28 @@ spec:
       containers:
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
+
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: password
+            - name: POSTGRES_SCHEMA
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: database
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-secret-postgres
+                  key: host
       restartPolicy: Never
