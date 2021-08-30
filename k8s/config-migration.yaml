@@ -16,12 +16,12 @@ spec:
       containers:
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
-          command: ['/bin/sh', '-c']
+          command: ['/bin/bash', '-c']
           args:
             - |
               npx sequelize-cli db:migrate
               sleep 5s
-              trap "touch /tmp/pod/terminated" EXIT
+              trap "touch /tmp/pod/main-terminated" EXIT
           volumeMounts:
             - mountPath: /tmp/pod
               name: tmp-pod
@@ -51,13 +51,14 @@ spec:
 
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/bin/sh', '-c']
+          command: ['/bin/bash', '-c']
           args:
             - |
-              /cloud_sql_proxy -instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432 -credential_file=/secrets/cloudsql/credentials.json & CHILD_PID=$!
-              (while true; do if [[ -f "/tmp/pod/terminated" ]]; then kill $CHILD_PID; echo "Killed $CHILD_PID because the main container terminated."; fi; sleep 1; done) &
+              /cloud_sql_proxy -instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432 -credential_file=/secrets/cloudsql/credentials.json &
+              CHILD_PID=$!
+              (while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &
               wait $CHILD_PID
-              if [[ -f "/tmp/pod/terminated" ]]; then exit 0; echo "Job completed. Exiting..."; fi
+              if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi
           securityContext:
             runAsNonRoot: true
           volumeMounts:
