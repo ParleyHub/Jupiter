@@ -20,6 +20,8 @@ spec:
           args:
             - |
               npx sequelize-cli db:migrate
+              sleep 10s
+              trap "touch /tmp/pod/main-terminated" EXIT
           volumeMounts:
             - mountPath: /tmp/pod
               name: tmp-pod
@@ -52,7 +54,8 @@ spec:
           command:
             - '/cloud_sql_proxy'
             - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
-            - '-credential_file=/secrets/cloudsql/credentials.json & CHILD_PID=$!'
+            - '-credential_file=/secrets/cloudsql/credentials.json &'
+            - 'CHILD_PID=$!'
             - '(while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done) &'
             - 'wait $CHILD_PID'
             - 'if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi'
