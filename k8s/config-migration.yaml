@@ -20,8 +20,6 @@ spec:
           args:
             - |
               npx sequelize-cli db:migrate
-              sleep 10s
-              trap "touch /tmp/pod/main-terminated" EXIT
           volumeMounts:
             - mountPath: /tmp/pod
               name: tmp-pod
