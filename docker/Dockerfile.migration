@@ -9,5 +9,3 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 WORKDIR /app/src/database
-
-CMD [ "npx", "sequelize-cli", "db:migrate" ]

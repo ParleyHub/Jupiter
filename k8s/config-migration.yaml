@@ -12,6 +12,7 @@ spec:
             secretName: cloudsql-secret-sa
         - name: tmp-pod
           emptyDir: {}
+
       containers:
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
@@ -19,6 +20,7 @@ spec:
           args:
             - |
               sleep 2s
+              npx sequelize-cli db:migrate
               trap "touch /tmp/pod/terminated" EXIT
           volumeMounts:
             - mountPath: /tmp/pod
