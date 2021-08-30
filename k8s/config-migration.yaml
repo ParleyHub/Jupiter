@@ -16,7 +16,7 @@ spec:
       containers:
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
-          command: ['/bin/sh', '-c']
+          command: ['bash', '-c']
           args:
             - |
               npx sequelize-cli db:migrate
@@ -51,7 +51,7 @@ spec:
 
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/bin/sh', '-c']
+          command: ['bash', '-c']
           args:
             - |
               /cloud_sql_proxy -instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432 -credential_file=/secrets/cloudsql/credentials.json &
