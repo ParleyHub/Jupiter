@@ -19,8 +19,8 @@ spec:
           command: ['/bin/sh', '-c']
           args:
             - |
-              sleep 2s
               npx sequelize-cli db:migrate
+              sleep 5s
               trap "touch /tmp/pod/terminated" EXIT
           volumeMounts:
             - mountPath: /tmp/pod
