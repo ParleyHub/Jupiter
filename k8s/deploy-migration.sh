@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gcloud container clusters get-credentials parleyhub --region asia-east2 --project parleyhub-323409
+gcloud container clusters get-credentials parley-hub-cluster --zone asia-east2-c --project parley-hub-project
 
 kubectl delete job $CI_NAME-migration --ignore-not-found=true
 

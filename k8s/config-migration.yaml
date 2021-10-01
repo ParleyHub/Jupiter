@@ -6,66 +6,30 @@ spec:
   backoffLimit: 0
   template:
     spec:
-      volumes:
-        - name: $CI_NAME
-          secret:
-            secretName: cloudsql-secret-sa
-        - name: tmp-pod
-          emptyDir: {}
-
       containers:
         - name: $CI_NAME-migration
           image: $IMAGE_TAG
-          command: ['/bin/sh', '-c']
-          args:
-            - |
-              npx sequelize-cli db:migrate
-              sleep 10s
-              trap "touch /tmp/pod/main-terminated" EXIT
-          volumeMounts:
-            - mountPath: /tmp/pod
-              name: tmp-pod
           env:
             - name: NODE_ENV
               value: 'production'
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: password
             - name: POSTGRES_SCHEMA
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: database
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: host
-
-        - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command:
-            - '/cloud_sql_proxy'
-            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
-            - '-credential_file=/secrets/cloudsql/credentials.json'
-            - 'CHILD_PID=$!'
-            - '(while true; do if [[ -f "/tmp/pod/main-terminated" ]]; then kill $CHILD_PID; fi; sleep 1; done)'
-            - 'wait $CHILD_PID'
-            - 'if [[ -f "/tmp/pod/main-terminated" ]]; then exit 0; fi'
-          securityContext:
-            runAsNonRoot: true
-          volumeMounts:
-            - name: $CI_NAME
-              mountPath: /secrets/cloudsql
-              readOnly: true
-            - mountPath: /tmp/pod
-              name: tmp-pod
-              readOnly: true
       restartPolicy: Never

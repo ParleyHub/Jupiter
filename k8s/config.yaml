@@ -6,7 +6,7 @@ metadata:
   labels:
     name: $CI_NAME
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       name: $CI_NAME
@@ -24,10 +24,10 @@ spec:
           resources:
             limits:
               memory: 512Mi
-              cpu: '0.5'
+              cpu: '0.25'
             requests:
               memory: 256Mi
-              cpu: '0.3'
+              cpu: '0.1'
 
           env:
             - name: NODE_ENV
@@ -35,53 +35,28 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: password
             - name: POSTGRES_SCHEMA
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: database
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-postgres
+                  name: jupiter-postgres-secret
                   key: host
             - name: REDIS_HOST
               valueFrom:
                 secretKeyRef:
-                  name: jupiter-secret-redis
+                  name: jupiter-redis-secret
                   key: REDIS_HOST
-
-        - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command:
-            - '/cloud_sql_proxy'
-            - '-instances=parleyhub-323409:asia-east2:jupiter-postgres=tcp:5432'
-            - '-credential_file=/secrets/cloudsql/credentials.json'
-          securityContext:
-            runAsNonRoot: true
-          volumeMounts:
-            - name: $CI_NAME
-              mountPath: /secrets/cloudsql
-              readOnly: true
-          resources:
-            limits:
-              memory: 512Mi
-              cpu: '0.5'
-            requests:
-              memory: 256Mi
-              cpu: '0.3'
-
-      volumes:
-        - name: $CI_NAME
-          secret:
-            secretName: cloudsql-secret-sa
 
 ---
 apiVersion: v1
@@ -113,7 +88,7 @@ spec:
   tls:
     - hosts:
         - $DOMAIN
-      secretName: jupiter-secret-tls
+      secretName: jupiter-tls-secret
   rules:
     - host: $DOMAIN
       http:

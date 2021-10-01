@@ -13,7 +13,8 @@
     "check-format": "prettier --check ./src",
     "check-types": "tsc --pretty --noEmit",
     "test-all": "yarn check-lint && yarn check-format && yarn check-types && yarn test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "migration": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
