@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import http from 'http';
 
 import express, { Application, Request, Response } from 'express';
@@ -17,12 +19,22 @@ const server = new http.Server(app);
 const PORT = 5000;
 
 if (process.env.NODE_ENV !== 'test') {
-  database.sequelize.sync();
+  database.sequelize
+    .sync()
+    .then(() => {
+      server.listen(PORT, () => {
+        console.log(`The server listen on port ${PORT}`);
+      });
+    })
+    .catch((error: unknown) => {
+      console.log('error', error);
+    });
 }
 
-server.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`The server listen on port ${PORT}`);
-});
+if (process.env.NODE_ENV === 'test') {
+  server.listen(PORT, () => {
+    console.log(`The server listen on port ${PORT}`);
+  });
+}
 
 export default app;

@@ -57,6 +57,11 @@ spec:
                 secretKeyRef:
                   name: jupiter-redis-secret
                   key: host
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-redis-secret
+                  key: password
 
 ---
 apiVersion: v1

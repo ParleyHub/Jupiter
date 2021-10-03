@@ -2,6 +2,7 @@ import redis, { RedisError } from 'redis';
 
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PASSWORD,
 });
 
 redisClient.on('error', (error: RedisError) => {
