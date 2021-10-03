@@ -19,16 +19,19 @@ const server = new http.Server(app);
 const PORT = 5000;
 
 if (process.env.NODE_ENV !== 'test') {
-  database.sequelize
-    .sync()
-    .then(() => {
-      server.listen(PORT, () => {
-        console.log(`The server listen on port ${PORT}`);
-      });
-    })
-    .catch((error: unknown) => {
-      console.log('error', error);
-    });
+  server.listen(PORT, () => {
+    console.log(`The server listen on port ${PORT}`);
+  });
+  // database.sequelize
+  //   .sync()
+  //   .then(() => {
+  //     server.listen(PORT, () => {
+  //       console.log(`The server listen on port ${PORT}`);
+  //     });
+  //   })
+  //   .catch((error: unknown) => {
+  //     console.log('error', error);
+  //   });
 }
 
 if (process.env.NODE_ENV === 'test') {
