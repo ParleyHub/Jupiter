@@ -19,9 +19,14 @@ const server = new http.Server(app);
 const PORT = 5000;
 
 if (process.env.NODE_ENV !== 'test') {
-  server.listen(PORT, () => {
-    console.log(`The server listen on port ${PORT}`);
-  });
+  database.sequelize
+    .sync()
+    .then(() => {
+      console.log('Connected to postgres');
+    })
+    .catch((error: unknown) => {
+      console.log('error', error);
+    });
   // database.sequelize
   //   .sync()
   //   .then(() => {
@@ -34,10 +39,8 @@ if (process.env.NODE_ENV !== 'test') {
   //   });
 }
 
-if (process.env.NODE_ENV === 'test') {
-  server.listen(PORT, () => {
-    console.log(`The server listen on port ${PORT}`);
-  });
-}
+server.listen(PORT, () => {
+  console.log(`The server listen on port ${PORT}`);
+});
 
 export default app;
