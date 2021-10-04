@@ -52,6 +52,11 @@ spec:
                 secretKeyRef:
                   name: jupiter-postgres-secret
                   key: host
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-postgres-secret
+                  key: port
             - name: REDIS_HOST
               valueFrom:
                 secretKeyRef:
@@ -79,6 +84,7 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 5000
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
