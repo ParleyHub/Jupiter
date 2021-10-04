@@ -18,7 +18,7 @@ app.get('/', (_req: Request, res: Response) => {
 const server = new http.Server(app);
 const PORT = 5000;
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'production') {
   database.sequelize
     .sync()
     .then(() => {
@@ -27,12 +27,14 @@ if (process.env.NODE_ENV !== 'test') {
       });
     })
     .catch((error: unknown) => {
-      console.log('error', error);
+      console.log('Error Postgres', error);
     });
 }
 
-server.listen(PORT, () => {
-  console.log(`The server listen on port ${PORT}`);
-});
+if (process.env.NODE_ENV === 'test') {
+  server.listen(PORT, () => {
+    console.log(`The server listen on port ${PORT}`);
+  });
+}
 
 export default app;
