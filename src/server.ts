@@ -22,21 +22,13 @@ if (process.env.NODE_ENV !== 'test') {
   database.sequelize
     .sync()
     .then(() => {
-      console.log('Connected to postgres');
+      server.listen(PORT, () => {
+        console.log(`The server listen on port ${PORT}`);
+      });
     })
     .catch((error: unknown) => {
       console.log('error', error);
     });
-  // database.sequelize
-  //   .sync()
-  //   .then(() => {
-  //     server.listen(PORT, () => {
-  //       console.log(`The server listen on port ${PORT}`);
-  //     });
-  //   })
-  //   .catch((error: unknown) => {
-  //     console.log('error', error);
-  //   });
 }
 
 server.listen(PORT, () => {
