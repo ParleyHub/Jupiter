@@ -6,7 +6,7 @@ metadata:
   labels:
     name: $CI_NAME
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       name: $CI_NAME
@@ -24,10 +24,10 @@ spec:
           resources:
             limits:
               memory: 512Mi
-              cpu: '0.25'
+              cpu: '0.3'
             requests:
               memory: 256Mi
-              cpu: '0.1'
+              cpu: '0.15'
 
           env:
             - name: NODE_ENV
