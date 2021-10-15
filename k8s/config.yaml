@@ -67,6 +67,16 @@ spec:
                 secretKeyRef:
                   name: jupiter-redis-secret
                   key: password
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-common-secret
+                  key: SECRET_KEY
+            - name: SECRET_KEY_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: jupiter-common-secret
+                  key: SECRET_KEY_REFRESH_TOKEN
 
 ---
 apiVersion: v1

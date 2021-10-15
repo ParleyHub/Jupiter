@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'production') {
       });
     })
     .catch((error: unknown) => {
-      console.log('Error Postgres', error);
+      console.log('Postgres Error', error);
     });
 }
 
