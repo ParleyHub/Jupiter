@@ -52,7 +52,7 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       REDIS_HOST: redis
-      REDIS_PASSWORD: '123456'
+      REDIS_PASSWORD: ''
       SECRET_KEY: 'JUPITER'
       SECRET_KEY_REFRESH_TOKEN: 'JUPITER_REFRESH_TOKEN'
       NODE_ENV: 'development'

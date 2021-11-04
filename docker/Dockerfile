@@ -1,4 +1,4 @@
-FROM node:16.6.1-alpine as builder
+FROM node:17.0.1-alpine as builder
 
 ENV APP=/app/
 
@@ -13,7 +13,7 @@ COPY . .
 RUN yarn test
 RUN yarn build
 
-FROM node:16.6.1-alpine
+FROM node:17.0.1-alpine
 
 ENV APP=/app/
 ENV BUILD=/app/dist
