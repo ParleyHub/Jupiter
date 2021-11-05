@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.dev
     ports:
-      - '5000:5000'
+      - '9000:9000'
     environment:
       POSTGRES_SCHEMA: 'jupiter'
       POSTGRES_USER: 'jupiter'

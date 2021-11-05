@@ -26,6 +26,6 @@ RUN yarn install --production --frozen-lockfile
 
 COPY --from=builder ${BUILD} ${APP}
 
-EXPOSE 5000
+EXPOSE 9000
 
 CMD [ "yarn", "start" ]
